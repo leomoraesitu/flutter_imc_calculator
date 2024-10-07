@@ -31,4 +31,40 @@ void main() {
     expect(find.textContaining('IMC: 22.86'), findsOneWidget);
     expect(find.textContaining('Categoria: Peso normal'), findsOneWidget);
   });
+
+
+  testWidgets('Teste de erro quando peso é 0', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const InputScreen());
+
+    // Simula a entrada do usuário com peso 0.
+    await tester.enterText(find.byType(TextField).at(0), 'John Doe');
+    await tester.enterText(find.byType(TextField).at(1), '0');
+    await tester.enterText(find.byType(TextField).at(2), '175');
+
+    // Toca no botão de calcular.
+    await tester.tap(find.text('Calcular IMC'));
+    await tester.pumpAndSettle(); // Aguarda até que todas as animações sejam concluídas.
+
+    // Verifica se o diálogo de erro é exibido com a mensagem correta.
+    expect(find.textContaining('O peso deve ser maior que zero'), findsOneWidget);
+  });
+
+  testWidgets('Teste de erro quando altura é 0', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const InputScreen());
+
+    // Simula a entrada do usuário com altura 0.
+    await tester.enterText(find.byType(TextField).at(0), 'John Doe');
+    await tester.enterText(find.byType(TextField).at(1), '70');
+    await tester.enterText(find.byType(TextField).at(2), '0');
+
+    // Toca no botão de calcular.
+    await tester.tap(find.text('Calcular IMC'));
+    await tester.pumpAndSettle(); // Aguarda até que todas as animações sejam concluídas.
+
+    // Verifica se o diálogo de erro é exibido com a mensagem correta.
+    expect(find.textContaining('A altura deve ser maior que zero'), findsOneWidget);
+  });
 }
+
