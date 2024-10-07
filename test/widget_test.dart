@@ -1,30 +1,34 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_imc_calculator/screens/input_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_imc_calculator/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Teste da tela de entrada e cálculo de IMC', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const InputScreen());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verifica se os campos de texto e o botão estão presentes.
+    expect(find.byType(TextField), findsNWidgets(3));
+    expect(find.text('Informe seu nome'), findsOneWidget);
+    expect(find.text('Informe seu peso (kg)'), findsOneWidget);
+    expect(find.text('Informe sua altura (cm)'), findsOneWidget);
+    expect(find.text('Calcular IMC'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Simula a entrada do usuário.
+    await tester.enterText(find.byType(TextField).at(0), 'John Doe');
+    await tester.enterText(find.byType(TextField).at(1), '70');
+    await tester.enterText(find.byType(TextField).at(2), '1.75');
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Toca no botão de calcular.
+    await tester.tap(find.text('Calcular IMC'));
+    await tester.pump(); // Aguarda o próximo frame.
+
+    // Aguarda a abertura do diálogo
+    await tester.pumpAndSettle();
+
+    // Verifica se o diálogo é exibido com os valores corretos.
+    expect(find.textContaining('Nome: John Doe'), findsOneWidget);
+    expect(find.textContaining('IMC: 22.86'), findsOneWidget);
+    expect(find.textContaining('Categoria: Peso normal'), findsOneWidget);
   });
 }
