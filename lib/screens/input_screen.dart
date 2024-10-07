@@ -85,18 +85,30 @@ class _MyHomePageState extends State<MyHomePage> {
                 double height = double.tryParse(_heightController.text) ?? 0.0;
 
                 Pessoa pessoa = Pessoa(name, weight, height);
-                double imc = ImcCalculator.calcularIMC(pessoa);
-                String categoria = ImcCalculator.obterCategoriaIMC(imc);
 
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: Text(
-                          'Nome: ${pessoa.getNome()}\nIMC: ${imc.toStringAsFixed(2)}\nCategoria: $categoria'),
-                    );
-                  },
-                );
+                try {
+                  double imc = ImcCalculator.calcularIMC(pessoa);
+                  String categoria = ImcCalculator.obterCategoriaIMC(imc);
+
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text(
+                            'Nome: ${pessoa.getNome()}\nIMC: ${imc.toStringAsFixed(2)}\nCategoria: $categoria'),
+                      );
+                    },
+                  );
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text(e.toString()),
+                      );
+                    },
+                  );
+                }
               },
               child: const Text('Calcular IMC'),
             ),
